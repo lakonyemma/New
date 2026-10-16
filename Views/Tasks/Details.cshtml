@@ -1,0 +1,84 @@
+@model TaskDetailsVm
+@{
+    var t=Model.Task;
+    ViewData["Title"] = "Task details";
+    var manager = User.IsInRole(Roles.Administrator) || User.IsInRole(Roles.Supervisor);
+}
+<div class="page-heading"><div><div class="eyebrow">TASK / DETAILS</div><h1>@t.Title</h1><p>@(t.Engagement?.ClientName ?? "General task") · Due @t.DueDate.ToString("dd MMM yyyy")</p></div><div class="heading-actions"><a class="btn light" asp-action="Index">← All tasks</a>@if(manager && t.Status != TaskStates.Completed){<a class="btn light" asp-action="Edit" asp-route-id="@t.Id">Edit task</a>}</div></div>
+<div class="task-detail-layout">
+    <section class="stack">
+        <article class="panel">
+            <div class="panel-header"><h2>Task overview</h2><span class="status @t.Status.Replace(" ", "").ToLowerInvariant()">@t.Status</span></div>
+            <p class="body-copy">@(string.IsNullOrWhiteSpace(t.Description) ? "No additional instructions." : t.Description)</p>
+            <div class="detail-grid">
+                <div><span class="small-label">PRIORITY</span><strong>@t.Priority</strong></div>
+                <div><span class="small-label">DEPARTMENT</span><strong>@t.Department</strong></div>
+                <div><span class="small-label">ASSIGNED EMPLOYEE</span><strong>@(t.AssignedEmployee?.FullName ?? "Awaiting assignment")</strong></div>
+                <div><span class="small-label">ESTIMATED EFFORT</span><strong>@t.EstimatedHours hours</strong></div>
+                <div><span class="small-label">REQUIRED SKILLS</span><strong>@(string.IsNullOrWhiteSpace(t.RequiredSkills) ? "General" : t.RequiredSkills)</strong></div>
+                <div><span class="small-label">DEADLINE</span><strong>@t.DueDate.ToString("dd MMM yyyy")</strong></div>
+            </div>
+            <div class="progress-section"><div><strong>Completion progress</strong><strong>@t.Progress%</strong></div><div class="progress-track large"><div style="width:@(t.Progress)%"></div></div></div>
+        </article>
+
+        @if(manager && t.Status == TaskStates.AwaitingReview)
+        {
+            <article class="panel"><div class="panel-header"><h2>Supervisor decision</h2><span class="count-pill">Requires approval</span></div>
+                <p class="muted">Review the submitted work before marking it completed, or return it with feedback.</p>
+                <form asp-controller="Reviews" asp-action="Decide" asp-route-id="@t.Id" method="post" class="form-stack">
+                    <div class="field"><label for="feedback">Feedback (required when returning)</label><textarea id="feedback" name="feedback" rows="3" maxlength="2000"></textarea></div>
+                    <div class="button-row"><button class="btn primary" type="submit" name="approve" value="true">✓ Approve completion</button><button class="btn outline" type="submit" name="approve" value="false">Return for changes</button></div>
+                </form>
+            </article>
+        }
+
+        @if(!manager && t.Status == TaskStates.InProgress)
+        {
+            <article class="panel"><div class="panel-header"><h2>Update your progress</h2></div>
+                <form asp-action="Progress" asp-route-id="@t.Id" method="post" class="form-stack">
+                    <div class="field"><label for="progress">Work complete (%)</label><input id="progress" name="progress" type="number" min="0" max="100" value="@t.Progress" required /></div>
+                    <div class="field"><label for="note">Update / notes</label><textarea id="note" name="note" rows="3" maxlength="2000" placeholder="What have you completed?"></textarea></div>
+                    <button class="btn primary" type="submit">Save progress →</button>
+                </form>
+                @if(t.Progress == 100){<form asp-action="Submit" asp-route-id="@t.Id" method="post" class="top-gap"><button class="btn outline" type="submit">Submit for supervisor review →</button></form>}
+            </article>
+        }
+
+        @if(manager && t.Status != TaskStates.Completed && t.Status != TaskStates.AwaitingReview)
+        {
+            <article class="panel"><div class="panel-header"><div><div class="eyebrow">INTELLIGENT ALLOCATION</div><h2>Suggested team members</h2></div><span class="count-pill">@Model.Recommendations.Count candidates</span></div>
+                <p class="muted">Skills must match and the employee must be available. Weekly load is an indicative estimate; final assignment is a supervisor decision.</p>
+                <div class="recommendations">
+                @foreach(var person in Model.Recommendations)
+                {
+                    <div class="recommendation">
+                        <div class="person-cell"><span class="avatar">@person.Name.FirstOrDefault()</span><span><strong>@person.Name</strong><small>@person.Department · @person.Reason</small></span></div>
+                        <div class="candidate-stats"><span><strong>@person.SkillMatch%</strong><small>Skill match</small></span><span><strong>@person.ProjectedPercent%</strong><small>Projected load</small></span></div>
+                        @if(person.Eligible)
+                        {
+                            <form asp-action="Assign" asp-route-id="@t.Id" method="post" class="allocation-form">
+                                <input type="hidden" name="employeeId" value="@person.EmployeeId"/>
+                                @if(person.ProjectedPercent > 100)
+                                {
+                                    <label class="warning-inline"><input type="checkbox" name="confirmOverload" value="true" /> Confirm overload</label>
+                                    <input class="override" type="text" name="overrideReason" minlength="10" maxlength="300" placeholder="Why override capacity? (10+ characters)" />
+                                }
+                                <button type="submit" class="btn @(person.ProjectedPercent > 100 ? "outline" : "primary") small">Assign →</button>
+                            </form>
+                        }
+                        else {<span class="status awaitingreview">Not eligible</span>}
+                    </div>
+                }
+                </div>
+                @if(Model.Recommendations.Count == 0){<div class="blank-inline">Create team members to receive matching recommendations.</div>}
+            </article>
+        }
+    </section>
+    <aside class="stack">
+        <div class="feature-panel compact-feature"><div class="eyebrow light">DELIVERY OWNERSHIP</div><h2>Human decisions. Better outcomes.</h2><p>Recommendations support your team. Approval and task ownership remain with people.</p></div>
+        <section class="panel compact"><div class="panel-header"><h2>Activity timeline</h2></div>
+        @if(Model.History.Count == 0){<p class="muted">No progress updates yet.</p>}
+        @foreach(var update in Model.History){<div class="history-row"><span class="history-dot"></span><div><strong>@update.Author</strong><small>@update.At.ToString("dd MMM yyyy · HH:mm") UTC</small><p>@update.Message</p></div></div>}
+        </section>
+    </aside>
+</div>

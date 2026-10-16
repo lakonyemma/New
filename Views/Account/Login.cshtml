@@ -1,0 +1,32 @@
+@model LoginForm
+@{
+    ViewData["Title"] = "Sign in";
+}
+<div class="login-page">
+    <section class="login-intro">
+        <div class="login-brand"><span class="brand-mark">W</span> WORKWISE <span class="login-brand-tag">/ KHAN ASSOCIATES</span></div>
+        <div class="login-copy">
+            <div class="eyebrow light">SMARTER WORK. BALANCED TEAMS.</div>
+            <h1>The right people.<br /><em>The right work.</em><br />Every time.</h1>
+            <p>One workspace for client engagements, employee workload, intelligent allocation and trusted delivery.</p>
+            <div class="login-benefits"><span>◎ Skills-based allocation</span><span>↗ Real-time progress</span><span>◉ Human-approved decisions</span></div>
+        </div>
+        <div class="login-foot">BUILT FOR PROFESSIONAL SERVICE TEAMS</div>
+    </section>
+    <section class="login-form-area">
+        <div class="login-card">
+            <span class="step-pill">WORKWISE PLATFORM</span>
+            <h2>Welcome back.</h2>
+            <p class="muted">Sign in to manage tasks and team workload.</p>
+            <form asp-action="Login" method="post" class="form-stack">
+                <input asp-for="ReturnUrl" type="hidden" />
+                <div asp-validation-summary="ModelOnly" class="validation"></div>
+                <div class="field"><label asp-for="UserName">Username</label><input asp-for="UserName" autocomplete="username" placeholder="Your username" autofocus /><span asp-validation-for="UserName" class="validation"></span></div>
+                <div class="field"><label asp-for="Password">Password</label><input asp-for="Password" autocomplete="current-password" placeholder="Enter your password" /><span asp-validation-for="Password" class="validation"></span></div>
+                <button class="btn primary block" type="submit">Sign in to Workwise <span>→</span></button>
+            </form>
+            <p class="login-help">Accounts are managed by your organization administrator.</p>
+        </div>
+        <div class="login-security">🔒 Protected by secure sign-in and role-based access</div>
+    </section>
+</div>

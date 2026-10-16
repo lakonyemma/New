@@ -1,0 +1,21 @@
+@model TaskForm
+@{
+    var editing=Model.Id.HasValue;
+    ViewData["Title"] = editing ? "Edit task" : "New task";
+}
+<div class="page-heading"><div><div class="eyebrow">WORK MANAGEMENT / PLANNING</div><h1>@(editing ? "Update this task" : "Plan the next task.")</h1><p>Describe the work clearly so the system can recommend a suitable employee.</p></div><a class="btn light" asp-controller="Tasks" asp-action="Index">← Back to tasks</a></div>
+<section class="panel form-panel">
+<form method="post" asp-action="@(editing ? "Edit" : "Create")" asp-route-id="@Model.Id">
+<div asp-validation-summary="ModelOnly" class="validation"></div>
+<div class="form-grid">
+<div class="field span-2"><label asp-for="Title">Task title</label><input asp-for="Title" placeholder="e.g. Prepare audit working papers"/><span asp-validation-for="Title" class="validation"></span></div>
+<div class="field span-2"><label asp-for="Description">Description</label><textarea asp-for="Description" rows="4" placeholder="Expected result and any important instructions"></textarea><span asp-validation-for="Description" class="validation"></span></div>
+<div class="field"><label asp-for="EngagementId">Linked engagement</label><select asp-for="EngagementId" asp-items="@(ViewBag.Engagements as IEnumerable<SelectListItem>)"><option value="">No engagement</option></select></div>
+<div class="field"><label asp-for="Department"></label><select asp-for="Department"><option>Audit</option><option>Accounting</option><option>Tax</option><option>Business Advisory</option></select></div>
+<div class="field"><label asp-for="RequiredSkills">Required skills (comma-separated)</label><input asp-for="RequiredSkills" placeholder="Audit, Excel, IFRS"/></div>
+<div class="field"><label asp-for="Priority"></label><select asp-for="Priority"><option>Low</option><option>Medium</option><option>High</option></select></div>
+<div class="field"><label asp-for="EstimatedHours">Estimated hours</label><input asp-for="EstimatedHours" type="number" min="0.5" step="0.5"/></div>
+<div class="field"><label asp-for="DueDate">Due date</label><input asp-for="DueDate" type="date" asp-format="{0:yyyy-MM-dd}"/><span asp-validation-for="DueDate" class="validation"></span></div>
+</div>
+<div class="form-actions"><a class="btn light" asp-action="Index">Cancel</a><button type="submit" class="btn primary">@(editing?"Save changes":"Create & find employees") →</button></div>
+</form></section>

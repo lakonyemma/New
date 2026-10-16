@@ -1,0 +1,10 @@
+@model List<WorkItem>
+@{
+    ViewData["Title"] = "Review & approvals";
+}
+<div class="page-heading"><div><div class="eyebrow">QUALITY ASSURANCE</div><h1>Review with confidence.</h1><p>Submitted work awaits a supervisor’s final decision.</p></div><span class="count-pill">@Model.Count to review</span></div>
+<section class="panel"><div class="table-wrap"><table><thead><tr><th>Task</th><th>Client</th><th>Submitted by</th><th>Due date</th><th>Status</th><th></th></tr></thead><tbody>
+@foreach(var t in Model){<tr><td><strong>@t.Title</strong></td><td>@(t.Engagement?.ClientName ?? "General")</td><td>@(t.AssignedEmployee?.FullName ?? "Unknown")</td><td>@t.DueDate.ToString("dd MMM yyyy")</td><td><span class="status awaitingreview">@t.Status</span></td><td><a class="text-link" asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id">Review →</a></td></tr>}
+</tbody></table></div>
+@if(Model.Count == 0){<div class="blank-inline"><strong>Everything is up to date.</strong><p>When staff submit completed work, it will appear here.</p></div>}
+</section>

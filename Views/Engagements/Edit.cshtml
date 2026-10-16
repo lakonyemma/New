@@ -1,0 +1,14 @@
+@model EngagementForm
+@{
+    var editing=Model.Id.HasValue; ViewData["Title"]=editing?"Edit engagement":"New engagement";
+}
+<div class="page-heading"><div><div class="eyebrow">CLIENT DELIVERY / ENGAGEMENT</div><h1>@(editing ? "Update engagement" : "Start a new engagement")</h1><p>Keep client context, deadlines and delivery stages in one place.</p></div><a class="btn light" asp-action="Index">← Back</a></div>
+<section class="panel form-panel"><form method="post" asp-action="@(editing ? "Edit" : "Create")" asp-route-id="@Model.Id">
+<div asp-validation-summary="ModelOnly" class="validation"></div><div class="form-grid">
+<div class="field"><label asp-for="ClientName">Client name</label><input asp-for="ClientName" placeholder="e.g. ABC Ltd"/><span asp-validation-for="ClientName" class="validation"></span></div>
+<div class="field"><label asp-for="Name">Engagement title</label><input asp-for="Name" placeholder="Annual audit 2026"/><span asp-validation-for="Name" class="validation"></span></div>
+<div class="field"><label asp-for="ServiceLine">Service line</label><select asp-for="ServiceLine"><option>Audit</option><option>Accounting</option><option>Tax</option><option>Business Advisory</option></select></div>
+<div class="field"><label asp-for="Stage">Stage</label><select asp-for="Stage"><option>Planning</option><option>Field Work</option><option>Review</option><option>Completed</option></select></div>
+<div class="field"><label asp-for="DueDate">Target completion date</label><input asp-for="DueDate" type="date" asp-format="{0:yyyy-MM-dd}" /><span asp-validation-for="DueDate" class="validation"></span></div>
+<div class="field span-2"><label asp-for="Notes"></label><textarea asp-for="Notes" rows="4" placeholder="Scope, objectives and notes"></textarea></div>
+</div><div class="form-actions"><a class="btn light" asp-action="Index">Cancel</a><button class="btn primary" type="submit">@(editing?"Save changes":"Create engagement") →</button></div></form></section>
