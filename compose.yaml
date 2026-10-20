@@ -8,7 +8,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: "server=db;port=3306;database=workwise_db;user=workwise;password=${MYSQL_APP_PASSWORD:?Set MYSQL_APP_PASSWORD}"
-      ASPNETCORE_HTTPS_PORT: ""
+      Database__ApplyMigrationsOnStartup: "${APPLY_MIGRATIONS_ON_STARTUP:-false}"
+      InitialSetup__Enabled: "${INITIAL_SETUP_ENABLED:-false}"
+      InitialSetup__Token: "${INITIAL_SETUP_TOKEN:-}"
     depends_on:
       db:
         condition: service_healthy
