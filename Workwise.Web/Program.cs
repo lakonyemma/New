@@ -5,7 +5,7 @@ using Workwise.Web.Models;
 using Workwise.Web.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
-builder.Services.AddHealthChecks().AddDbContextCheck<ApplicationDbContext>();
+builder.Services.AddHealthChecks();
 var cs = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Missing database connection");
 builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseMySql(cs, ServerVersion.AutoDetect(cs)));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<long>>(o => { o.Password.RequiredLength = 10; o.User.RequireUniqueEmail = true; }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
