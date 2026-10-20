@@ -1,1 +1,2 @@
-<h1>Employee dashboard</h1><p>My assigned work.</p>
+@model Workwise.Web.Models.EmployeeDashboardViewModel
+<h1>Employee dashboard</h1><p>Your live task and notification summary.</p><div class="stats"><article>Assigned tasks<strong>@Model.AssignedTasks</strong></article><article>Completed tasks<strong>@Model.CompletedTasks</strong></article><article>Pending submissions<strong>@Model.PendingSubmissions</strong></article><article>Unread notifications<strong>@Model.UnreadNotifications</strong></article></div><p><a asp-area="Employee" asp-controller="MyTasks" asp-action="Index">View my tasks</a></p>

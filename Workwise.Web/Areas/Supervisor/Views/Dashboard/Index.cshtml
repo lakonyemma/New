@@ -1,1 +1,2 @@
-<h1>Supervisor dashboard</h1><p>Team workload and allocation workspace.</p>
+@model Workwise.Web.Models.SupervisorDashboardViewModel
+<h1>Supervisor dashboard</h1><p>Live data for your supervised departments.</p><div class="stats"><article>Team members<strong>@Model.TeamMembers</strong></article><article>Projects<strong>@Model.Projects</strong></article><article>Open tasks<strong>@Model.OpenTasks</strong></article><article>Active assignments<strong>@Model.ActiveAssignments</strong></article><article>Pending reviews<strong>@Model.PendingSubmissions</strong></article></div><p><a asp-area="Supervisor" asp-controller="Tasks" asp-action="Index">Manage tasks</a></p>

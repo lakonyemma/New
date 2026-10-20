@@ -1,1 +1,2 @@
-<h1>Admin dashboard</h1><p>Organization management workspace.</p>
+@model Workwise.Web.Models.AdminDashboardViewModel
+<h1>Admin dashboard</h1><p>Live statistics from MySQL.</p><div class="stats"><article>Users<strong>@Model.Users</strong></article><article>Departments<strong>@Model.Departments</strong></article><article>Projects<strong>@Model.Projects</strong></article><article>Tasks<strong>@Model.Tasks</strong></article><article>Active assignments<strong>@Model.ActiveAssignments</strong></article></div><p><a asp-area="Admin" asp-controller="Users" asp-action="Index">Manage users</a></p>
