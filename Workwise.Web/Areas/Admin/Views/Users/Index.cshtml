@@ -1,0 +1,5 @@
+@model IEnumerable<Workwise.Web.Models.ApplicationUser>
+<h1>Users</h1>
+<table><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>
+@foreach(var u in Model){<tr><td>@u.FullName</td><td>@u.Email</td><td><form method="post" asp-action="SetRole"><input type="hidden" name="userId" value="@u.Id"/><select name="role"><option>Admin</option><option>Supervisor</option><option>Employee</option></select><button type="submit">Update</button></form></td></tr>}
+</tbody></table>

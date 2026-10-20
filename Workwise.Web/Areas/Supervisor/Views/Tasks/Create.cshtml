@@ -1,0 +1,9 @@
+@model Workwise.Web.Areas.Supervisor.Controllers.TaskInput
+<h1>Create task</h1><form method="post"><div asp-validation-summary="All"></div>
+<label asp-for="ProjectId"></label><select asp-for="ProjectId">@foreach(var p in (IEnumerable<Workwise.Web.Models.Project>)ViewBag.Projects){<option value="@p.Id">@p.Name</option>}</select>
+<label asp-for="Title"></label><input asp-for="Title"/>
+<label asp-for="Description"></label><textarea asp-for="Description"></textarea>
+<label asp-for="EstimatedMinutes"></label><input asp-for="EstimatedMinutes"/>
+<label asp-for="Priority"></label><input asp-for="Priority"/>
+<label asp-for="DueAt"></label><input asp-for="DueAt" type="datetime-local"/>
+<button type="submit">Create</button></form>

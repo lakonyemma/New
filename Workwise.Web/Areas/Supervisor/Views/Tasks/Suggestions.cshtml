@@ -1,0 +1,3 @@
+@model IEnumerable<Workwise.Web.Services.AllocationSuggestion>
+<h1>Suggested employees for @ViewBag.Task.Title</h1>
+@foreach(var s in Model){<form asp-action="Assign" method="post"><input type="hidden" name="taskId" value="@ViewBag.Task.Id"/><input type="hidden" name="employeeUserId" value="@s.EmployeeUserId"/><p>Employee #@s.EmployeeUserId — Score: @s.Score / 100 — Assigned: @s.CurrentAssignedMinutes min <button type="submit">Assign</button></p></form>}

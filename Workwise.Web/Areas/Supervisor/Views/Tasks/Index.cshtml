@@ -1,0 +1,5 @@
+@model IEnumerable<Workwise.Web.Models.TaskItem>
+<h1>Team tasks</h1><p><a asp-action="Create">Create task</a></p>
+<table><thead><tr><th>Task</th><th>Status</th><th>Priority</th><th>Action</th></tr></thead><tbody>
+@foreach(var t in Model){<tr><td>@t.Title</td><td>@t.Status</td><td>@t.Priority</td><td><a asp-action="Suggestions" asp-route-id="@t.Id">Suggest allocation</a></td></tr>}
+</tbody></table>

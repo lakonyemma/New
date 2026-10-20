@@ -1,0 +1,3 @@
+@model IEnumerable<Workwise.Web.Models.TaskItem>
+<h1>My tasks</h1>
+@foreach(var t in Model){<article><h2>@t.Title</h2><p>@t.Description</p><p>Due: @t.DueAt</p><form asp-action="Submit" method="post"><input type="hidden" name="taskId" value="@t.Id"/><textarea name="note" placeholder="Completion notes"></textarea><button type="submit">Submit work</button></form></article>}
