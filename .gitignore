@@ -1,11 +1,5 @@
-bin/
-obj/
-.vs/
-.idea/
-.vscode/
-*.user
+**/bin/
+**/obj/
 .env
-appsettings.Development.json
-*.db
-*.sqlite
-wwwroot/uploads/
+.vs/
+.vscode/

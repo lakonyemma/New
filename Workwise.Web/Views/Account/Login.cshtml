@@ -1,0 +1,2 @@
+@model Workwise.Web.Controllers.LoginInput
+<h1>Sign in</h1><form asp-action="Login" method="post"><div asp-validation-summary="All"></div><input asp-for="Email" placeholder="Email"/><input asp-for="Password" placeholder="Password"/><input type="hidden" asp-for="ReturnUrl"/><button type="submit">Sign in</button></form>

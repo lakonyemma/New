@@ -1,0 +1,9 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Workwise.Web.Models;
+namespace Workwise.Web.Data;
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser,IdentityRole<long>,long>(options) {
+public DbSet<Department> Departments => Set<Department>(); public DbSet<Team> Teams => Set<Team>(); public DbSet<EmployeeProfile> EmployeeProfiles => Set<EmployeeProfile>(); public DbSet<Skill> Skills => Set<Skill>(); public DbSet<EmployeeSkill> EmployeeSkills => Set<EmployeeSkill>(); public DbSet<Project> Projects => Set<Project>(); public DbSet<TaskItem> Tasks => Set<TaskItem>(); public DbSet<TaskAssignment> TaskAssignments => Set<TaskAssignment>(); public DbSet<TaskSkillRequirement> TaskSkillRequirements => Set<TaskSkillRequirement>(); public DbSet<Notification> Notifications => Set<Notification>(); public DbSet<TaskSubmission> TaskSubmissions => Set<TaskSubmission>(); public DbSet<TaskReview> TaskReviews => Set<TaskReview>();
+protected override void OnModelCreating(ModelBuilder b) { base.OnModelCreating(b); b.Entity<EmployeeProfile>().HasKey(x=>x.UserId); b.Entity<EmployeeProfile>().HasIndex(x=>x.EmployeeNumber).IsUnique(); b.Entity<EmployeeSkill>().HasKey(x=>new{x.EmployeeUserId,x.SkillId}); b.Entity<TaskSkillRequirement>().HasKey(x=>new{x.TaskId,x.SkillId}); b.Entity<Department>().HasIndex(x=>x.Name).IsUnique(); b.Entity<Skill>().HasIndex(x=>x.Name).IsUnique(); b.Entity<TaskAssignment>().HasIndex(x=>new{x.TaskId,x.EmployeeUserId}); b.Entity<TaskItem>().HasIndex(x=>new{x.ProjectId,x.Status}); }
+}
